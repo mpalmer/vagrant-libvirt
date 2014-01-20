@@ -31,6 +31,15 @@ module VagrantPlugins
         require_relative 'provider'
         Provider
       end
+      
+      action_hook('nuke_image_before_box_remove') do |hook|
+        require_relative 'action/nuke_image'
+        require_relative 'action/mock_machine'
+        
+        hook.before ::Vagrant::Action::Builtin::BoxRemove, VagrantPlugins::ProviderLibvirt::Action::MockMachine
+        hook.before ::Vagrant::Action::Builtin::BoxRemove, VagrantPlugins::ProviderLibvirt::Action::ConnectLibvirt
+        hook.before ::Vagrant::Action::Builtin::BoxRemove, VagrantPlugins::ProviderLibvirt::Action::NukeImage
+      end  
 
       # This initializes the internationalization strings.
       def self.setup_i18n
